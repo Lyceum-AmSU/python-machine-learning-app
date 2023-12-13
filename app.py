@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from streamlit_pandas_profiling import st_profile_report
 from ydata_profiling import ProfileReport
+from pycaret.regression import setup, compare_models, pull, save_model
 
 with st.sidebar:
     st.title('Streamlit')
@@ -25,7 +26,23 @@ if choice == 'Профилирование':
     st_profile_report(profile)
 
 if choice == 'Машинное обучение':
-    pass
+    st.title('Обучаем')
+    target = st.selectbox('Выберите целевую переменную', df.columns)
+    if st.button('Обучить'):
+        setup(df, target=target)
+        setup_df = pull()
+        st.info('Параметры модели')
+        st.dataframe(setup_df)
+        best_model = compare_models()
+        compare_df = pull()
+        st.info('Модель')
+        st.dataframe(compare_df)
+        st.info('Лучшая модель')
+        best_model
+        save_model(best_model, 'best_model')
+
 
 if choice == 'Скачать модель':
-    pass
+    st.title('Лучшая модель')
+    with open('best_model.pkl', 'rb') as f:
+        st.download_button('Скачать модель', f, 'best_model.pkl')
