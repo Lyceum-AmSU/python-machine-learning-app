@@ -152,3 +152,7 @@ cython_debug/
 .idea/
 Scripts
 pyvenv.cfg
+*.csv
+etc
+Include
+share
